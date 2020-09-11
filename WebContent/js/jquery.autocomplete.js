@@ -1,6 +1,6 @@
 jQuery.autocomplete = function(input, options) {
 	// Create a link to self
-	//alert("jQuery.autocomplete ");
+
 	var me = this;
 
 	// Create jQuery object for input element
@@ -129,7 +129,7 @@ jQuery.autocomplete = function(input, options) {
 
  	function moveSelect(step) {
 
-		alert("Move selece ");
+		
  		var lis = $("option", results);
 		if (!lis) return;
 
@@ -173,9 +173,9 @@ jQuery.autocomplete = function(input, options) {
 	function selectItemlist(li){
 		var v = li.value;
 		
-		alert(v+"  "+prev);
+	
 		if (v == prev) return;
-		$input.val(prev+"*"+v);
+		$input.val(v);
 		prev = v;
 		if (v.length >= options.minChars) {
 			$input.addClass(options.loadingClass);
@@ -188,7 +188,7 @@ jQuery.autocomplete = function(input, options) {
 	}
 
 	function selectItem(li) {
-		//alert("selet Item");
+		
 		if (!li) {
 			li = document.createElement("option");
 			li.extra = [];
@@ -274,7 +274,7 @@ jQuery.autocomplete = function(input, options) {
 			results.innerHTML = "";
 
 			// if the field no longer has focus or if there are no matches, do not display the drop down
-			//if( !hasFocus || data.length == 0 ) return hideResultsNow();
+			//if( data.length == 0 ) $results.hide();
 
 			if ($.browser.msie) {
 				// we put a styled iframe behind the calendar so HTML SELECT elements don't show through
@@ -334,7 +334,7 @@ jQuery.autocomplete = function(input, options) {
 	};
 
 	function requestData(q) {
-		//alert("requestda");
+	
 		if (!options.matchCase) q = q.toLowerCase();
 		var data = options.cacheLength ? loadFromCache(q) : null;
 		// recieve the cached data
@@ -420,7 +420,7 @@ jQuery.autocomplete = function(input, options) {
 	}
 
 	function findValueCallback(q, data){
-		alert("findValueCallback");
+		
 		if (data) $input.removeClass(options.loadingClass);
 
 		var num = (data) ? data.length : 0;
@@ -475,7 +475,7 @@ jQuery.autocomplete = function(input, options) {
 }
 
 jQuery.fn.autocomplete = function(url, options, data) {
-	//alert("jQuery.fn.autocomplete "+url);
+	
 	// Make sure options exists
 	options = options || {};
 	// Set url as option

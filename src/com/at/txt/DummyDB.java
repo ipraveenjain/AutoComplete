@@ -21,13 +21,13 @@ public class DummyDB {
 			countries.add(st.nextToken().trim());
 		}
 		totalCountries = countries.size();
-		datamap.put("afghanistan", "afghanistan-map");
-		datamap.put("albania", "albania-map");
-		datamap.put("zimbabwe", "aimbabwe-map");
+		datamap.put("afghanistan", "afghanistan*afghanistan-map");
+		datamap.put("albania", "albania*albania-map");
+		datamap.put("zimbabwe", "zimbabwe*aimbabwe-map");
 		
-		datamap1.put("afghanistan-map", "afghanistan-Map1");
-		datamap1.put("albania-map", "albania-Map1");
-		datamap1.put("zimbabwe-map", "zimbabwe-Map1");
+		datamap1.put("afghanistan*afghanistan-map", "afghanistan*afghanistan-map*afghanistan-Map1");
+		datamap1.put("albania*albania-map", "albania*albania-map*albania-Map1");
+		datamap1.put("zimbabwe*aimbabwe-map", "zimbabwe*aimbabwe-map*zimbabwe-Map1");
 	}
 	
 	public List<String> getData(String query) {
