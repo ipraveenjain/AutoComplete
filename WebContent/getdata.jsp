@@ -11,6 +11,7 @@
 	Iterator<String> iterator = countries.iterator();
 	while(iterator.hasNext()) {
 		String country = (String)iterator.next();
+		
 		out.println(country);
 	}
 %>

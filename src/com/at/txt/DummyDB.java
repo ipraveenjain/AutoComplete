@@ -10,6 +10,7 @@ public class DummyDB {
 	private int totalCountries;
 	private String data = "Afghanistan,	Albania, Zimbabwe";
 	private Map<String,String> datamap=new HashMap();
+	private Map<String,String> datamap1=new HashMap();
 	
 	private List<String> countries;
 	public DummyDB() {
@@ -20,9 +21,13 @@ public class DummyDB {
 			countries.add(st.nextToken().trim());
 		}
 		totalCountries = countries.size();
-		datamap.put("afghanistan", "Afghanistan-Map");
-		datamap.put("albania", "Albania-Map");
-		datamap.put("zimbabwe", "Zimbabwe-Map");
+		datamap.put("afghanistan", "afghanistan-map");
+		datamap.put("albania", "albania-map");
+		datamap.put("zimbabwe", "aimbabwe-map");
+		
+		datamap1.put("afghanistan-map", "afghanistan-Map1");
+		datamap1.put("albania-map", "albania-Map1");
+		datamap1.put("zimbabwe-map", "zimbabwe-Map1");
 	}
 	
 	public List<String> getData(String query) {
@@ -30,11 +35,14 @@ public class DummyDB {
 		query = query.toLowerCase();
 		System.out.println("data for "+query);
 		List<String> matched = new ArrayList<String>();
-		String mat=datamap.get(query);
+		String mat=datamap1.get(query);
+		if(mat==null) {
+			mat=datamap.get(query);
+		}
 		System.out.println("mat si  for "+mat);
 		if(mat==null) {
 		for(int i=0; i<totalCountries; i++) {
-			System.out.println("getting countroes ");
+			//System.out.println("getting countroes ");
 			country = countries.get(i).toLowerCase();
 			if(country.startsWith(query)) {
 				matched.add(countries.get(i));

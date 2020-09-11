@@ -10,10 +10,10 @@ jQuery.autocomplete = function(input, options) {
 	if (options.inputClass) $input.addClass(options.inputClass);
 
 	// Create results
-	var results = document.createElement("div");
+	var results = document.createElement("select");
 	// Create jQuery object for results
 	var $results = $(results);
-	//$results.hide().addClass(options.resultsClass).css("position", "absolute");
+	$results.hide().addClass(options.resultsClass).css("position", "absolute");
 	if( options.width > 0 ) $results.css("width", options.width);
 
 	// Add to body element
@@ -114,7 +114,7 @@ jQuery.autocomplete = function(input, options) {
 
 	function onChange() {
 		// ignore if the following keys are pressed: [del] [shift] [capslock]
-		//if( lastKeyPressCode == 46 || (lastKeyPressCode > 8 && lastKeyPressCode < 32) ) return $results.hide();
+		if( lastKeyPressCode == 46 || (lastKeyPressCode > 8 && lastKeyPressCode < 32) ) return $results.hide();
 		var v = $input.val();
 		if (v == prev) return;
 		prev = v;
@@ -123,14 +123,14 @@ jQuery.autocomplete = function(input, options) {
 			requestData(v);
 		} else {
 			$input.removeClass(options.loadingClass);
-			//$results.hide();
+			$results.hide();
 		}
 	};
 
  	function moveSelect(step) {
 
 		alert("Move selece ");
- 		var lis = $("li", results);
+ 		var lis = $("option", results);
 		if (!lis) return;
 
 		active += step;
@@ -155,7 +155,7 @@ jQuery.autocomplete = function(input, options) {
 	function selectCurrent() {
 		var li = $("li.ac_over", results)[0];
 		if (!li) {
-			var $li = $("li", results);
+			var $li = $("option", results);
 			if (options.selectOnly) {
 				if ($li.length == 1) li = $li[0];
 			} else if (options.selectFirst) {
@@ -169,22 +169,39 @@ jQuery.autocomplete = function(input, options) {
 			return false;
 		}
 	};
+	
+	function selectItemlist(li){
+		var v = li.value;
+		
+		alert(v+"  "+prev);
+		if (v == prev) return;
+		$input.val(prev+"*"+v);
+		prev = v;
+		if (v.length >= options.minChars) {
+			$input.addClass(options.loadingClass);
+			requestData(v);
+		} else {
+			$input.removeClass(options.loadingClass);
+			$results.hide();
+		}
+		
+	}
 
 	function selectItem(li) {
 		//alert("selet Item");
 		if (!li) {
-			li = document.createElement("li");
+			li = document.createElement("option");
 			li.extra = [];
 			li.selectValue = "";
 		}
-		var v = $.trim(li.selectValue ? li.selectValue : li.innerHTML);
+		var v = $.trim(li.selectValue ? li.selectValue : li.value);
 		input.lastSelected = v;
 		prev = v;
-		$results.html("");
+		//$results.html("");
 		$input.val(v);
 		hideResultsNow();
 		if (options.onItemSelect) setTimeout(function() { options.onItemSelect(li) }, 1);
-		requestData(v);
+		//requestData(v);
 	};
 
 	// selects a portion of the input string
@@ -257,13 +274,13 @@ jQuery.autocomplete = function(input, options) {
 			results.innerHTML = "";
 
 			// if the field no longer has focus or if there are no matches, do not display the drop down
-			if( !hasFocus || data.length == 0 ) return hideResultsNow();
+			//if( !hasFocus || data.length == 0 ) return hideResultsNow();
 
 			if ($.browser.msie) {
 				// we put a styled iframe behind the calendar so HTML SELECT elements don't show through
 				$results.append(document.createElement('iframe'));
 			}
-			results.appendChild(dataToDom(data));
+			dataToDom(data);
 			// autofill in the complete box w/the first match as long as the user hasn't entered in more data
 			if( options.autoFill && ($input.val().toLowerCase() == q.toLowerCase()) ) autoFill(data[0][0]);
 			showResults();
@@ -286,38 +303,34 @@ jQuery.autocomplete = function(input, options) {
 	};
 
 	function dataToDom(data) {
-		var ul = document.createElement("ul");
+		//var ul = document.createElement("ul");
 		var num = data.length;
-
+		//var options1 = document.createElement("option");
 		// limited results to a max number
 		if( (options.maxItemsToShow > 0) && (options.maxItemsToShow < num) ) num = options.maxItemsToShow;
-
 		for (var i=0; i < num; i++) {
 			var row = data[i];
 			if (!row) continue;
-			var li = document.createElement("li");
+	
+			var option1 = document.createElement("option");
 			if (options.formatItem) {
-				li.innerHTML = options.formatItem(row, i, num);
-				li.selectValue = row[0];
+				option1.value =row[0];// options.formatItem(row, i, num);
+				 option1.text = row[0];
+				option1.selectValue = row[0];
 			} else {
-				li.innerHTML = row[0];
-				li.selectValue = row[0];
+		    option1.value = row[0];
+		    option1.text = row[0];
+		  
 			}
-			var extra = null;
-			if (row.length > 1) {
-				extra = [];
-				for (var j=1; j < row.length; j++) {
-					extra[extra.length] = row[j];
-				}
-			}
-			li.extra = extra;
-			ul.appendChild(li);
-			$(li).hover(
-				function() { $("li", ul).removeClass("ac_over"); $(this).addClass("ac_over"); active = $("li", ul).indexOf($(this).get(0)); },
+			
+			  results.appendChild(option1);
+			
+			$(results).hover(
+				function() { $("option", option1).removeClass("ac_over"); $(this).addClass("ac_over"); active = $("option", option1).indexOf($(this).get(0)); },
 				function() { $(this).removeClass("ac_over"); }
-			).click(function(e) { e.preventDefault(); e.stopPropagation(); selectItem(this) });
+			).click(function(e) { e.preventDefault(); e.stopPropagation(); selectItemlist(this) });
 		}
-		return ul;
+		//return ul;
 	};
 
 	function requestData(q) {
@@ -407,6 +420,7 @@ jQuery.autocomplete = function(input, options) {
 	}
 
 	function findValueCallback(q, data){
+		alert("findValueCallback");
 		if (data) $input.removeClass(options.loadingClass);
 
 		var num = (data) ? data.length : 0;
